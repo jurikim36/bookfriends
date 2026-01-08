@@ -32,9 +32,9 @@ const RecordForm: React.FC<RecordFormProps> = ({ onSaved, defaultAuthor, groupId
   useEffect(() => {
     const draft = getDraft();
     if (draft) {
-      setFormData(prev => ({ ...prev, ...draft }));
+      setFormData(prev => ({ ...prev, ...draft, authorName: defaultAuthor || draft.authorName }));
     }
-  }, []);
+  }, [defaultAuthor]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -78,19 +78,19 @@ const RecordForm: React.FC<RecordFormProps> = ({ onSaved, defaultAuthor, groupId
   };
 
   return (
-    <div className="max-w-xl mx-auto pb-24 px-4 pt-4">
+    <div className="max-w-xl mx-auto pb-24 px-4 pt-4 animate-in slide-in-from-bottom duration-300">
       <div className="flex justify-between items-center mb-6 px-2">
-        <h2 className="text-2xl font-bold text-gray-800">기록하기</h2>
+        <h2 className="text-2xl font-black text-ewha">기록하기</h2>
         <div className="flex gap-2">
           <button 
             onClick={handleDraft}
-            className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+            className="px-4 py-2 text-sm font-bold text-ewha bg-ewha-soft rounded-xl hover:bg-ewha/10 transition-colors"
           >
             임시저장
           </button>
           <button 
             onClick={handleSave}
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 text-sm font-bold text-white bg-ewha rounded-xl hover:bg-ewha-dark transition-all shadow-lg shadow-ewha/10 active:scale-95"
           >
             기록하기
           </button>
@@ -98,162 +98,116 @@ const RecordForm: React.FC<RecordFormProps> = ({ onSaved, defaultAuthor, groupId
       </div>
 
       <div className="space-y-6">
-        {/* Basic Info */}
-        <section className="bg-white p-6 rounded-3xl shadow-sm space-y-4">
+        <section className="bg-white p-6 rounded-[2rem] shadow-sm border border-ewha/5 space-y-4">
           <div>
-            <label className="block text-sm font-semibold text-gray-600 mb-1">책 제목</label>
+            <label className="block text-xs font-black text-ewha/40 uppercase tracking-widest mb-2 px-1">책 제목</label>
             <input 
               name="title"
               value={formData.title}
               onChange={handleChange}
               placeholder="책 제목을 입력하세요"
-              className="w-full px-4 py-3 border border-gray-100 bg-gray-50/50 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              className="w-full px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-ewha focus:bg-white outline-none transition-all font-bold text-gray-800"
             />
           </div>
           <div>
-            <label className="block text-sm font-semibold text-gray-600 mb-1">기록가 이름</label>
+            <label className="block text-xs font-black text-ewha/40 uppercase tracking-widest mb-2 px-1">기록가 이름</label>
             <input 
               name="authorName"
               value={formData.authorName}
-              onChange={handleChange}
-              placeholder="본인의 이름을 입력하세요"
-              className="w-full px-4 py-3 border border-gray-100 bg-gray-50/50 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              readOnly
+              className="w-full px-5 py-4 bg-ewha-soft/30 border border-gray-100 rounded-2xl outline-none font-black text-ewha cursor-not-allowed opacity-80"
+              title="가입 시 설정한 이름이 사용됩니다"
             />
           </div>
         </section>
 
-        {/* Cover Image */}
-        <section className="bg-white p-6 rounded-3xl shadow-sm">
-          <label className="block text-sm font-semibold text-gray-600 mb-4">책 커버 사진</label>
+        <section className="bg-white p-6 rounded-[2rem] shadow-sm border border-ewha/5">
+          <label className="block text-xs font-black text-ewha/40 uppercase tracking-widest mb-4 px-1">책 커버 사진</label>
           <div 
             onClick={() => fileInputRef.current?.click()}
-            className="w-full aspect-[3/4] max-w-[200px] mx-auto border-2 border-dashed border-gray-100 bg-gray-50/50 rounded-3xl flex flex-col items-center justify-center cursor-pointer overflow-hidden hover:bg-gray-100 transition-all relative group"
+            className="w-full aspect-[3/4] max-w-[200px] mx-auto border-2 border-dashed border-ewha/10 bg-gray-50/50 rounded-3xl flex flex-col items-center justify-center cursor-pointer overflow-hidden hover:bg-ewha/5 hover:border-ewha/20 transition-all relative group"
           >
             {formData.coverImage ? (
               <>
                 <img src={formData.coverImage} className="w-full h-full object-cover" alt="Cover Preview" />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">변경하기</span>
+                <div className="absolute inset-0 bg-ewha/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <span className="text-white text-xs font-black">변경하기</span>
                 </div>
               </>
             ) : (
               <div className="text-center p-4">
                 <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm mx-auto mb-3">
-                  <svg className="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6 text-ewha" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                   </svg>
                 </div>
-                <p className="text-xs text-gray-500 font-bold">사진 업로드</p>
-                <p className="text-[10px] text-gray-400 mt-1">갤러리에서 선택</p>
+                <p className="text-xs text-ewha/60 font-black">사진 업로드</p>
+                <p className="text-[10px] text-gray-300 mt-1">갤러리에서 선택</p>
               </div>
             )}
           </div>
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleImageUpload} 
-            accept="image/*" 
-            className="hidden" 
-          />
+          <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" />
         </section>
 
-        {/* Book Details */}
-        <section className="bg-white p-6 rounded-3xl shadow-sm">
-          <h3 className="text-lg font-bold text-gray-800 mb-6">&lt;책 정보&gt;</h3>
+        <section className="bg-white p-6 rounded-[2rem] shadow-sm border border-ewha/5">
+          <h3 className="text-sm font-black text-ewha mb-6 flex items-center">
+            <span className="w-1 h-3 bg-ewha rounded-full mr-2"></span>
+            책 상세 정보
+          </h3>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-500 mb-1">읽기 시작한 날</label>
-                <input 
-                  type="date"
-                  name="startDate"
-                  value={formData.startDate}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm"
-                />
+                <label className="block text-[10px] font-black text-gray-400 mb-1 px-1">시작일</label>
+                <input type="date" name="startDate" value={formData.startDate} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm font-bold text-gray-700" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-500 mb-1">다 읽은 날</label>
-                <input 
-                  type="date"
-                  name="endDate"
-                  value={formData.endDate}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm"
-                />
+                <label className="block text-[10px] font-black text-gray-400 mb-1 px-1">종료일</label>
+                <input type="date" name="endDate" value={formData.endDate} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm font-bold text-gray-700" />
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1">작가</label>
-              <input 
-                name="writer"
-                value={formData.writer}
-                onChange={handleChange}
-                placeholder="책 저자 이름"
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1">출판사</label>
-              <input 
-                name="publisher"
-                value={formData.publisher}
-                onChange={handleChange}
-                placeholder="출판사명"
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm"
-              />
+              <label className="block text-[10px] font-black text-gray-400 mb-1 px-1">작가</label>
+              <input name="writer" value={formData.writer} onChange={handleChange} placeholder="책 저자 이름" className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm font-bold text-gray-700" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-gray-500 mb-1">장르</label>
-                <select 
-                  name="genre"
-                  value={formData.genre}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm"
-                >
+                <label className="block text-[10px] font-black text-gray-400 mb-1 px-1">장르</label>
+                <select name="genre" value={formData.genre} onChange={handleChange} className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm font-bold text-gray-700 outline-none">
                   {GENRES.map(g => <option key={g} value={g}>{g}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-500 mb-1">페이지 수</label>
-                <input 
-                  type="number"
-                  name="pages"
-                  value={formData.pages || ''}
-                  onChange={handleChange}
-                  placeholder="0"
-                  className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm"
-                />
+                <label className="block text-[10px] font-black text-gray-400 mb-1 px-1">페이지</label>
+                <input type="number" name="pages" value={formData.pages || ''} onChange={handleChange} placeholder="0" className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm font-bold text-gray-700" />
               </div>
             </div>
           </div>
         </section>
 
-        {/* Book Review */}
-        <section className="bg-white p-6 rounded-3xl shadow-sm">
-          <h3 className="text-lg font-bold text-gray-800 mb-6">&lt;책 기록&gt;</h3>
+        <section className="bg-white p-6 rounded-[2rem] shadow-sm border border-ewha/5">
+          <h3 className="text-sm font-black text-ewha mb-6 flex items-center">
+            <span className="w-1 h-3 bg-ewha rounded-full mr-2"></span>
+            나의 기록
+          </h3>
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-3">별점</label>
-              <StarRating 
-                rating={formData.rating || 0} 
-                interactive 
-                onRatingChange={(r) => setFormData(prev => ({ ...prev, rating: r }))} 
-              />
+              <label className="block text-[10px] font-black text-gray-400 mb-3 px-1">별점</label>
+              <div className="bg-ewha-soft/20 p-4 rounded-2xl flex justify-center">
+                <StarRating rating={formData.rating || 0} interactive onRatingChange={(r) => setFormData(prev => ({ ...prev, rating: r }))} />
+              </div>
             </div>
             <div>
-              <div className="flex justify-between items-center mb-2">
-                <label className="block text-xs font-semibold text-gray-500">기록 (감상)</label>
-                <span className={`text-[10px] font-bold ${ (formData.review?.length || 0) > 450 ? 'text-red-400' : 'text-gray-300'}`}>{(formData.review?.length || 0)} / 500자</span>
+              <div className="flex justify-between items-center mb-2 px-1">
+                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest">감상평</label>
+                <span className={`text-[9px] font-black ${ (formData.review?.length || 0) > 450 ? 'text-red-500' : 'text-ewha/30'}`}>{(formData.review?.length || 0)} / 500</span>
               </div>
               <textarea 
                 name="review"
                 value={formData.review}
                 onChange={handleChange}
                 maxLength={500}
-                placeholder="책을 읽고 느낀 점을 자유롭게 기록해 보세요 (500자 이내)"
-                className="w-full h-40 px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none transition-all"
+                placeholder="책을 읽고 느낀 점을 자유롭게 기록해 보세요"
+                className="w-full h-44 px-5 py-4 bg-gray-50 border border-gray-100 rounded-2xl text-sm font-medium focus:ring-2 focus:ring-ewha focus:bg-white outline-none resize-none transition-all text-gray-700"
               />
             </div>
           </div>
